@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "388685647537",
+    "project_id": "chatnight-73bc9",
+    "storage_bucket": "chatnight-73bc9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388685647537:android:dcd61bf276d683a5451c90",
+        "android_client_info": {
+          "package_name": "com.example.chatnight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388685647537-kqqtn6sfteh9u8iit7gmdecid22osj3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAemBm0OsWLndTrVnuzMHbKUxgJWdSDanY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388685647537-kqqtn6sfteh9u8iit7gmdecid22osj3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
