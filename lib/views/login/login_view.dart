@@ -1,17 +1,23 @@
-import 'package:chatnight/screens/home_screen.dart';
+import 'dart:developer';
+import 'dart:io';
+import 'package:chatnight/api/apis.dart';
+import 'package:chatnight/helper/dialogs.dart';
+import 'package:chatnight/views/home_view.dart';
 import 'package:chatnight/widget/button.dart';
 import 'package:chatnight/widget/square_tile.dart';
 import 'package:chatnight/widget/textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+class LoginView extends StatefulWidget {
+  LoginView({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginViewState extends State<LoginView> {
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -25,6 +31,48 @@ class _LoginScreenState extends State<LoginScreen> {
             child: CircularProgressIndicator(),
           );
         });
+  }
+
+  // handles google login button click
+  _handleGoogleBtnClick() {
+    //for showing progress bar
+    Dialogs.showProgressBar(context);
+
+    _signInWithGoogle().then((user) async {
+      //for hiding progress bar
+      Navigator.pop(context);
+
+      if (user != null) {
+        log('\nUser: ${user.user}');
+        log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const HomeView()));
+      }
+    });
+  }
+
+  Future<UserCredential?> _signInWithGoogle() async {
+    try {
+      await InternetAddress.lookup('google.com');
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      return await APIs.auth.signInWithCredential(credential);
+    } catch (e) {
+      log('\n_signInWithGoogle: $e');
+      Dialogs.showSnackbar(context, 'Something Went Wrong (Check Internet!)');
+      return null;
+    }
   }
 
   @override
@@ -91,9 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     // google button
                     SquareTile(
                       imagePath: 'assets/icons/google.png',
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-                      },
+                      onTap: () => _handleGoogleBtnClick(),
+                      // Navigator.push(context, MaterialPageRoute(builder: (_) => HomeView()),
                     ),
                     const SizedBox(width: 25),
                     SquareTile(
